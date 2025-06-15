@@ -23,7 +23,7 @@ public class Member {
     @Embedded
     private Address address;
 
-    //@JsonIgnore ->Response에서 해당 필드는 무시하고 반환하기(password에서는 쓰겠지..?)
+//    @JsonIgnore //->Response에서 해당 필드는 무시하고 반환하기(password에서는 쓰겠지..?)
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
