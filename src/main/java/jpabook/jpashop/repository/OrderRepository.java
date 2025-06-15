@@ -7,6 +7,7 @@ import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -102,5 +103,23 @@ public class OrderRepository { //순수 엔티티 조회하는데 쓰고 성능�
                         " join fetch o.member m" +
                         " join fetch o.delivery d" , Order.class
         ).getResultList();
+    }
+
+    public List<Order> findAllWithItem() {//컬랙션은 패치조인 시 페이징 불가능
+        return em.createQuery("select distinct o from Order o" +
+                " join fetch o.member m" +
+                " join fetch o.delivery d" +
+                " join fetch o.orderItems oi" +
+                " join fetch oi.item i", Order.class).getResultList();
+    }
+
+    public List<Order> findAllWithMemberDelivery2(int offset, int limit) {//페이징 => default_batch_fetch_size 설정을 하면 toOne도 fetch를 안해도 다 가져온다
+        return em.createQuery(
+                        "select o from Order o" +
+                                " join fetch o.member m" +
+                                " join fetch o.delivery d", Order.class
+                ).setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 }

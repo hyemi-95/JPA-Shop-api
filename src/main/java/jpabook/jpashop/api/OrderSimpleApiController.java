@@ -3,6 +3,7 @@ package jpabook.jpashop.api;
 
 import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.OrderItem;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
@@ -42,7 +43,8 @@ public class OrderSimpleApiController {
         for (Order order : all) {//원하는 것만 가능
             order.getMember().getName();// LAZY 강제 초기화
             order.getDelivery().getAddress();// LAZY 강제 초기화
-//            order.getOrderItems().forEach(oi -> {oi.getItem().getName();});// LAZY 강제 초기화
+//            List<OrderItem> orderItems = order.getOrderItems();
+//            orderItems.stream().forEach(o ->o.getItem().getName());//LAZY초기화
         }
         return all;
     }
@@ -51,7 +53,7 @@ public class OrderSimpleApiController {
     //alt+enter -> static+import
 
     /**
-     * V2. 엔티티를 조회해서 DTO로 변환(fetch join 사용X)
+     * V2. 엔티티를 조회해서 DTO로 변환(fetch join 사용X) , .DTO변환사용은 @JsonIgnore 필요없음
      * - 단점: 지연로딩으로 쿼리 N번 호출
      */
     @GetMapping("/api/v2/simple-orders")//DTO사용(절대적)

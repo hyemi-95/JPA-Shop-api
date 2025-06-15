@@ -19,10 +19,10 @@ public class OrderItem {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_item_id")
+    @JoinColumn(name = "order_id")
     private Item item; //주문상품
 
-//    @JsonIgnore
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="item_id")
     private Order order; //주문
