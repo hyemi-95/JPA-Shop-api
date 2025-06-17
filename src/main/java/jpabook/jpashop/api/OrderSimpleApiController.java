@@ -27,7 +27,7 @@ import static java.util.stream.Collectors.*;
  * */
 @RestController // 일반 컨트롤러로 하면 retrun을 무조건 뷰로 인식함
 @RequiredArgsConstructor
-public class OrderSimpleApiController {
+public class OrderSimpleApiController { //지연로딩과 조회성능 최적화
 
     private final OrderRepository orderRepository;
     private final OrderSimpleQueryRepository orderSimpleQueryRepository;
@@ -50,6 +50,7 @@ public class OrderSimpleApiController {
     }
 
     //ctrl+alt+n -> 줄임
+    //ctrl+alt+m -> 메서드로 뺌
     //alt+enter -> static+import
 
     /**
