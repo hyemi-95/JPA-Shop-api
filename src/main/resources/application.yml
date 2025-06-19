@@ -6,6 +6,7 @@ spring:
     driver-class-name: org.h2.Driver
 
   jpa:
+#    open-in-view: false # false로 한다면 모든 지연로딩을 트랜잭션안에서 초기화 하거나 패치조인 해야함
     hibernate:
       ddl-auto: create
     properties:

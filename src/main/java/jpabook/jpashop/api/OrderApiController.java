@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -39,7 +38,7 @@ public class OrderApiController {//컬렉션 조회
     public List<Order> orderV1() {
         List<Order> all = orderRepository.findAllByString(new OrderSearch());
         for (Order order : all) {
-            order.getMember().getName();
+            order.getMember().getName();//open-in-view: false 를 하면 지연로딩(초기화)불가 - 모든 지연로딩을 트랜잭션 안으로 넣거나 패치조인 해야서 List<Order> all 에 넘겨야 함
             order.getDelivery().getAddress();
             List<OrderItem> orderItems = order.getOrderItems();
             orderItems.stream().forEach(o -> o.getItem().getName());//LAZY초기화를 해준 이유 : Hibernate5JakartaModule 를 하면 프록시인 애는 데이타를 안뿌림
@@ -90,14 +89,14 @@ public class OrderApiController {//컬렉션 조회
         return orderQueryRepositoy.findOrderQueryDtos();
     }
 
-    @GetMapping("/api/v5/orders")
+    @GetMapping("/api/v5/orders") //엔티티방식으로 하면 `hibernate.default_batch_fetch_size` 쓰는 V3.1과 같은 성능
     public List<OrderQueryDto> orderV5() {
         return orderQueryRepositoy.findAllByDto_optimization();
     }
 
     @GetMapping("/api/v6/orders")
     public List<OrderQueryDto> orderV6() {
-        List<OrderFlatDto> flats = orderQueryRepositoy.findAllByDto_flat();
+        List<OrderFlatDto> flats = orderQueryRepositoy.findAllByDto_flat(); //Order기준으로 페이징이 불가능. 하려면 아래  처럼
 
         //루프돌리기 OrderFlatDto->OrderQueryDto
         return flats.stream()
